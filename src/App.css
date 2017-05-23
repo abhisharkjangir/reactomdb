@@ -1,0 +1,24 @@
+body {
+  margin:  0px;
+}
+.input-box{
+  height: 34px;
+  width: 500px;
+  padding: 5px 10px;
+  fontSize: 18px;
+  margin : 10px;
+}
+.btn {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 12px ;
+  font-size: 18px;
+  margin: 10px;
+  display : inline-block
+}
+.btn:hover{
+  transition: background-color ease .2s;
+  background-color: #000;
+  color: #fff;
+}
