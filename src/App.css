@@ -1,12 +1,98 @@
 body {
   margin:  0px;
 }
+
+.header {
+  background-color: #4d4d4d;
+    color: #fff;
+    text-align: center;
+    position: fixed;
+    margin: 0px;
+    width: 100%;
+    z-index: 1;
+    /* height: 44px; */
+}
+
+.header ul {
+  margin: 0px;
+  list-style: none;
+  -webkit-padding-start : 0px;
+}
+
+.header ul li {
+  display: inline-block;
+  padding: 10px;
+  margin:5px;
+}
+
+.header ul li a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.row{
+  /*margin-left:-15px;
+  margin-right  : -15px;*/
+}
+.row:before,
+.row:after{
+  display: table;
+  content: " ";
+}
+
+
+.row:after{
+  clear: both;
+}
+.container{
+
+}
+.left-part {
+  text-align: center;
+    float: left;
+    width: 50%;
+    height: 100vh;
+    position: fixed;
+    background-color: #eee;
+    vertical-align: middle;
+    display: table;
+}
+.right-part {
+  float: right;
+  width: 50%;
+  height: 100vh;
+  background-color: #ccc;
+  vertical-align: middle;
+  display: table;
+}
+
+.movie-listing {
+
+}
+
+.movie-listing ul{
+  list-style: none;
+  -webkit-padding-start: 0px;
+}
+.movie-listing ul li{
+  padding: 10px;
+  margin:  10px;
+  min-height:150px;
+  background-color: #fff;
+}
+
+.movie-listing .card img {
+  width :15%;
+  float: left;
+  margin-right: 10px;
+}
+
+
 .input-box{
   height: 34px;
-  width: 500px;
+  min-width: 320px;
   padding: 5px 10px;
-  fontSize: 18px;
-  margin : 10px;
+  font-size: 18px;
 }
 .btn {
   background-color: #fff;

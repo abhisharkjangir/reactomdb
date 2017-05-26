@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import {InputBox,Btn,Span} from './components/commoncomponents';
+import {Container,Header,InputBox,Btn,Span} from './components/commoncomponents';
 import './App.css';
 
 class App extends Component {
   render() {
+    const menuItems = [{name:'Home',link:'',id:1},{name:'Detail',link:'',id:2},{name:'Listing',link:'',id:3}];
     return (
       <div className="App">
-        <InputBox inputClass="input-box" labelName="" placeholderText="E.g. Hangover" />
-        {/* <Btn btnClass="btn" btnText="Search"/> */}
+        <Header  menuItems={menuItems}/>
+        <Container />
+        {/* <InputBox inputClass="input-box" labelName="" placeholderText="E.g. Hangover" /> */}
       </div>
     );
   }
