@@ -72,16 +72,23 @@ class LeftPart extends Component {
 class RightPart extends Component {
   constructor() {
     super();
-    this.state = {search: '',year :'',type:'',poster:''};
-    // this.getMovieDetail = this.getMovieDetail.bind(this);
+    this.state = {search: '',year :'',type:'',poster:'',view : {detail :false,list : true},movie :{}};
+    this.closeDetailView = this.closeDetailView.bind(this);
   }
 
- getMovieDetail(imdbID){
-   console.log(imdbID);
-}
+  getMovieDetail(movie){
+    this.setState({movie : movie,view : {detail :true}},function () {
+
+    });
+  }
+
+  closeDetailView(){
+    this.setState({view : {detail :false}},function () {
+
+    });
+  };
 
   render(){
-    // const movie = {Title : "Test"};
     return(
       <div style={this.props.rightPartStyle} className="right-part">
         <div className="movie-listing">
@@ -89,7 +96,7 @@ class RightPart extends Component {
           	<div className="card-columns">
               {this.props.data.map(movie =>
                 <div key={movie._id} className="pin">
-                  {movie.Poster !== 'N/A'?<img src={movie.Poster} onClick={() => this.getMovieDetail(movie.imdbID)}  alt=''/> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" onClick={() => this.getMovieDetail(movie.imdbID)} alt='' />}
+                  {movie.Poster !== 'N/A'?<img src={movie.Poster} onClick={() => this.getMovieDetail(movie)}  alt=''/> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" onClick={() => this.getMovieDetail(movie)} alt='' />}
                   <div className="card-detail">
                     <p>{movie.Title}</p>
                     <p><strong>Type:</strong> {movie.Type}</p>
@@ -100,7 +107,7 @@ class RightPart extends Component {
             </div>
           </div>
         </div>
-        {/* <DetailOverlay className="detail-overlay" movie={movie} style="display:none"/> */}
+        {this.state.view.detail?<DetailOverlay  movie={this.state.movie} closeFun={this.closeDetailView} /> :''}
       </div>
     )
   }
@@ -109,9 +116,13 @@ class RightPart extends Component {
 class DetailOverlay extends Component {
 
   render(){
+    const movie = this.props.movie;
     return (
-      <div >
-        {this.props.movie.Title}
+      <div className="detail-overlay">
+        <h1>{movie.Title}</h1><br/>
+        <p>Released on : {movie.Released} | Dur : {movie.Runtime} | Language : {movie.Language} | Country : {movie.Country} </p>
+        <p>{movie.Awards} | Metascore : {movie.Metascore} | IMDBRating : {movie.imdbRating} | IMDBVotes : {movie.imdbVotes} </p>
+        <span className="close-detail-view-btn" onClick={this.props.closeFun} >Close </span>
       </div>
     )
   }
@@ -139,7 +150,7 @@ class Container extends Component {
   }
 
   searchMovie = (filter) => {
-    let url = "http://192.168.30.62:9000/db/movie/search/" + filter.search;
+    let url = "http://localhost:9000/db/movie/search/" + filter.search;
     if (filter.type) {
       url = url + '?type=' + filter.type;
     }
