@@ -49,7 +49,7 @@ class LeftPart extends Component {
       <div style={this.props.leftPartStyle} className="left-part">
         <div style={style}>
           <h1>OMDB-Filter</h1>
-          <input style={input} className="input-box" name="Search" value={this.state.search} type="text" placeholder="E.g. Batman" onChange={this.handleChange('search')} /><br/>
+          <input style={input} className="input-box" name="Search" value={this.state.search} type="text" placeholder="E.g. Batman" onChange={this.handleChange('search')} autoFocus="true" /><br/>
           <select placeholder="Select Type" onChange={this.handleChange('type')}>
             <option value="">Select Type</option>
             <option value="movie">Movie</option>
@@ -64,14 +64,24 @@ class LeftPart extends Component {
             <option value="a">Available</option>
             <option value="n">Not Available</option>
           </select>
-          {/* <input style={input} className="input-box" name="Year" value={this.state.year} type="text" placeholder="E.g. 2017" onChange={this.handleChange('year')} /><br/> */}
         </div>
       </div>
     )
   }
 }
 class RightPart extends Component {
+  constructor() {
+    super();
+    this.state = {search: '',year :'',type:'',poster:''};
+    // this.getMovieDetail = this.getMovieDetail.bind(this);
+  }
+
+ getMovieDetail(imdbID){
+   console.log(imdbID);
+}
+
   render(){
+    // const movie = {Title : "Test"};
     return(
       <div style={this.props.rightPartStyle} className="right-part">
         <div className="movie-listing">
@@ -79,7 +89,7 @@ class RightPart extends Component {
           	<div className="card-columns">
               {this.props.data.map(movie =>
                 <div key={movie._id} className="pin">
-                  {movie.Poster != 'N/A'?<img src={movie.Poster} /> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" />}
+                  {movie.Poster !== 'N/A'?<img src={movie.Poster} onClick={() => this.getMovieDetail(movie.imdbID)}  alt=''/> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" onClick={() => this.getMovieDetail(movie.imdbID)} alt='' />}
                   <div className="card-detail">
                     <p>{movie.Title}</p>
                     <p><strong>Type:</strong> {movie.Type}</p>
@@ -90,6 +100,18 @@ class RightPart extends Component {
             </div>
           </div>
         </div>
+        {/* <DetailOverlay className="detail-overlay" movie={movie} style="display:none"/> */}
+      </div>
+    )
+  }
+}
+
+class DetailOverlay extends Component {
+
+  render(){
+    return (
+      <div >
+        {this.props.movie.Title}
       </div>
     )
   }
@@ -117,8 +139,7 @@ class Container extends Component {
   }
 
   searchMovie = (filter) => {
-    // this.setState({movies: []});
-    let url = "http://localhost:9000/db/movie/search/" + filter.search;
+    let url = "http://192.168.30.62:9000/db/movie/search/" + filter.search;
     if (filter.type) {
       url = url + '?type=' + filter.type;
     }

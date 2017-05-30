@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container,Header,InputBox,Btn,Span} from './components/commoncomponents';
+import {Container,Header} from './components/commoncomponents';
 import './App.css';
 
 class App extends Component {

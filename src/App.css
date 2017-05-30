@@ -65,6 +65,15 @@ body {
   vertical-align: middle;
   display: table;
 }
+.detail-overlay {
+  position: absolute;
+  min-height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.94);
+  top: 0px;
+  padding: 60px 10px;
+  color: #fff;
+}
 
 .movie-listing {
   padding: 10px;
