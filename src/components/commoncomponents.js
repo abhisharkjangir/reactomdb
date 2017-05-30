@@ -43,15 +43,46 @@ class LeftPart extends Component {
 class RightPart extends Component {
   render(){
     const style = {
-      padding : "10px",
-      paddingTop : "78px"
+      card : {
+        border : "1px solid #4d4d4d",
+        width : '50%',
+        display : "inline-block"
+      },
+      image: {
+        display : "block",
+        width : "100%",
+        height : "auto"
+      }
     }
 
     return(
       <div className="right-part">
-        <div style={style} className="movie-listing">
-          {this.props.data.length > 0 ? 'Search result': 'No Data Found!' }
-          <ul >
+        <div className="movie-listing">
+          {/* {this.props.data.length > 0 ? 'Search result': 'No Data Found!' }
+          {this.props.data.map(movie =>
+            <div style={style.card}>
+              {movie.Poster != 'N/A'?<img src={movie.Poster} style={style.image} /> : <img style={style.image} src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" />}
+              <p>{movie.Title}</p>
+              <p>{movie.Type}</p>
+              <p>{movie.Year}</p>
+            </div>
+          )} */}
+
+          <div className="card-wrapper">
+          	<div className="card-columns">
+              {this.props.data.map(movie =>
+                <div key={movie._id} className="pin">
+                  {movie.Poster != 'N/A'?<img src={movie.Poster} /> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" />}
+                  <div className="card-detail">
+                    <p>{movie.Title}</p>
+                    <p><strong>Type:</strong> {movie.Type}</p>
+                    <p><strong>Year:</strong> {movie.Year}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* <ul >
             {this.props.data.map(movie =>
               <li key={movie._id}>
                 <div className="card">
@@ -62,7 +93,7 @@ class RightPart extends Component {
                 </div>
               </li>
             )}
-          </ul>
+          </ul> */}
         </div>
       </div>
     )
