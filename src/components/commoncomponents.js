@@ -15,13 +15,21 @@ class Header extends Component{
 class LeftPart extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: '',movies :[]};
+    this.state = {search: '',year :'',type:''};
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (event) => {
-    this.setState({value: event.target.value});
-    this.props.searchFun(event.target.value);
+  handleChange = (stateKey) => (event) => {
+    this.setState({
+      [stateKey]: event.target.value
+    },function(){
+      let filter = {
+        search : this.state.search,
+        year : this.state.year,
+        type:this.state.type
+      };
+      this.props.searchFun(filter);
+    });
   };
 
   render(){
@@ -29,12 +37,27 @@ class LeftPart extends Component {
       textAlign : "center",
       verticalAlign : "middle",
       display : "table-cell"
+    };
+    const input = {marginBottom:"15px"};
+    const yearList = [];
+    const currentYear = new Date().getFullYear();
+    for (var i = currentYear; i >= 1900; i--) {
+      yearList.push(i);
     }
-
     return(
       <div className="left-part">
         <div style={style}>
-          <input className="input-box" name="Search" value={this.state.value} type="text" placeholder="E.g. Batman" onChange={this.handleChange} />
+          <input style={input} className="input-box" name="Search" value={this.state.search} type="text" placeholder="E.g. Batman" onChange={this.handleChange('search')} /><br/>
+          <select placeholder="Select Type" onChange={this.handleChange('type')}>
+            <option value="">Select Type</option>
+            <option value="movie">Movie</option>
+            <option value="series">Series</option>
+          </select>
+          <select placeholder="Select Year" onChange={this.handleChange('year')}>
+            <option value="">Select Year</option>
+            {yearList.map(yr => <option key={yr} value={yr}>{yr}</option>)}
+          </select>
+          {/* <input style={input} className="input-box" name="Year" value={this.state.year} type="text" placeholder="E.g. 2017" onChange={this.handleChange('year')} /><br/> */}
         </div>
       </div>
     )
@@ -42,32 +65,9 @@ class LeftPart extends Component {
 }
 class RightPart extends Component {
   render(){
-    const style = {
-      card : {
-        border : "1px solid #4d4d4d",
-        width : '50%',
-        display : "inline-block"
-      },
-      image: {
-        display : "block",
-        width : "100%",
-        height : "auto"
-      }
-    }
-
     return(
       <div className="right-part">
         <div className="movie-listing">
-          {/* {this.props.data.length > 0 ? 'Search result': 'No Data Found!' }
-          {this.props.data.map(movie =>
-            <div style={style.card}>
-              {movie.Poster != 'N/A'?<img src={movie.Poster} style={style.image} /> : <img style={style.image} src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" />}
-              <p>{movie.Title}</p>
-              <p>{movie.Type}</p>
-              <p>{movie.Year}</p>
-            </div>
-          )} */}
-
           <div className="card-wrapper">
           	<div className="card-columns">
               {this.props.data.map(movie =>
@@ -82,18 +82,6 @@ class RightPart extends Component {
               )}
             </div>
           </div>
-          {/* <ul >
-            {this.props.data.map(movie =>
-              <li key={movie._id}>
-                <div className="card">
-                  {movie.Poster != 'N/A'?<img src={movie.Poster} /> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" /> }
-                  <span>{movie.Title}</span><br/>
-                  <span>Type : {movie.Type}</span><br/>
-                  <span>Year : {movie.Year}</span><br/>
-                </div>
-              </li>
-            )}
-          </ul> */}
         </div>
       </div>
     )
@@ -104,13 +92,26 @@ class Container extends Component {
 
   constructor() {
     super();
-    this.state = {movies :[],searchTerm : ''};
+    this.state = {movies :[],filer : {search : '',year : '',type:''}};
     this.searchMovie = this.searchMovie.bind(this);
   }
 
-  searchMovie = (term) => {
+  searchMovie = (filter) => {
+    if (!filter.search) {
+      return;
+    }
     this.setState({movies: []});
-    let url = "http://localhost:9000/db/movie/search/" + term;
+    let url = "http://localhost:9000/db/movie/search/" + filter.search;
+    if (filter.type) {
+      url = url + '?type=' + filter.type;
+    }
+    if (filter.year) {
+      if (filter.type) {
+        url = url + '&year=' + filter.year;
+      }else {
+        url = url + '?year=' + filter.year;
+      }
+    }
     fetch(url)
      .then(response => response.json())
      .then(x => {
@@ -125,7 +126,7 @@ class Container extends Component {
   render(){
     return (
       <div className="row">
-        <LeftPart searchTerm={this.state.searchTerm} searchFun={this.searchMovie}/>
+        <LeftPart searchTerm={this.state.filer} searchFun={this.searchMovie}/>
         <RightPart data={this.state.movies}/>
       </div>
     )

@@ -198,3 +198,14 @@ color: #fff;
 	opacity: 0.4;
 }*/
 /*Cards*/
+
+select{
+  height: 45px;
+    min-width: 100px;
+    padding: 5px 10px;
+    margin-bottom: 15px;
+    border-radius: 0!important;
+    background-color: #fff;
+    font-size: 18px;
+    margin: 0 15px;
+  }
