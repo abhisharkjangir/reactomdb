@@ -15,7 +15,7 @@ class Header extends Component{
 class LeftPart extends Component {
   constructor(props) {
     super(props);
-    this.state = {search: '',year :'',type:''};
+    this.state = {search: '',year :'',type:'',poster:''};
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -26,7 +26,8 @@ class LeftPart extends Component {
       let filter = {
         search : this.state.search,
         year : this.state.year,
-        type:this.state.type
+        type:this.state.type,
+        poster : this.state.poster
       };
       this.props.searchFun(filter);
     });
@@ -56,6 +57,11 @@ class LeftPart extends Component {
           <select placeholder="Select Year" onChange={this.handleChange('year')}>
             <option value="">Select Year</option>
             {yearList.map(yr => <option key={yr} value={yr}>{yr}</option>)}
+          </select>
+          <select placeholder="Poster" onChange={this.handleChange('poster')}>
+            <option value="">Poster</option>
+            <option value="a">Available</option>
+            <option value="n">Not Available</option>
           </select>
           {/* <input style={input} className="input-box" name="Year" value={this.state.year} type="text" placeholder="E.g. 2017" onChange={this.handleChange('year')} /><br/> */}
         </div>
@@ -110,6 +116,13 @@ class Container extends Component {
         url = url + '&year=' + filter.year;
       }else {
         url = url + '?year=' + filter.year;
+      }
+    }
+    if (filter.poster) {
+      if (filter.type || filter.year) {
+        url = url + '&poster=' + filter.poster;
+      }else {
+        url = url + '?poster=' + filter.poster;
       }
     }
     fetch(url)
