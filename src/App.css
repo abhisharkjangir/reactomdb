@@ -49,8 +49,8 @@ body {
 }
 .left-part {
   text-align: center;
-    float: left;
-    width: 50%;
+    /*float: left;
+    width: 50%;*/
     height: 100vh;
     position: fixed;
     background-color: #eee;
@@ -58,8 +58,8 @@ body {
     display: table;
 }
 .right-part {
-  float: right;
-  width: 50%;
+  /*float: right;
+  width: 50%;*/
   height: 100vh;
   background-color: #ccc;
   vertical-align: middle;

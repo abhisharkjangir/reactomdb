@@ -46,8 +46,9 @@ class LeftPart extends Component {
       yearList.push(i);
     }
     return(
-      <div className="left-part">
+      <div style={this.props.leftPartStyle} className="left-part">
         <div style={style}>
+          <h1>OMDB-Filter</h1>
           <input style={input} className="input-box" name="Search" value={this.state.search} type="text" placeholder="E.g. Batman" onChange={this.handleChange('search')} /><br/>
           <select placeholder="Select Type" onChange={this.handleChange('type')}>
             <option value="">Select Type</option>
@@ -72,7 +73,7 @@ class LeftPart extends Component {
 class RightPart extends Component {
   render(){
     return(
-      <div className="right-part">
+      <div style={this.props.rightPartStyle} className="right-part">
         <div className="movie-listing">
           <div className="card-wrapper">
           	<div className="card-columns">
@@ -98,15 +99,25 @@ class Container extends Component {
 
   constructor() {
     super();
-    this.state = {movies :[],filer : {search : '',year : '',type:''}};
+    this.state = {movies :[],
+      filer : {
+        search : '',
+        year : '',type:''
+      },
+      leftPartCss : {
+        width: '100%',
+        float : "left"
+      },
+      rightPartCss : {
+      width: '0%',
+      float : "right"
+      }
+    };
     this.searchMovie = this.searchMovie.bind(this);
   }
 
   searchMovie = (filter) => {
-    if (!filter.search) {
-      return;
-    }
-    this.setState({movies: []});
+    // this.setState({movies: []});
     let url = "http://localhost:9000/db/movie/search/" + filter.search;
     if (filter.type) {
       url = url + '?type=' + filter.type;
@@ -133,14 +144,36 @@ class Container extends Component {
        }else {
          this.setState({movies: []});
        }
+       if (this.state.movies.length > 0) {
+         this.setState({leftPartCss : {
+           transition : "width ease .2s",
+           width: '50%',
+           float : "left"
+         },rightPartCss : {
+           transition : "width ease .2s",
+         width: '50%',
+         float : "right"
+         }});
+       }else {
+         this.setState({leftPartCss : {
+           transition : "width ease .2s",
+           width: '100%',
+           float : "left"
+         },rightPartCss : {
+           transition : "width ease .2s",
+         width: '0%',
+         float : "right"
+         }});
+       }
      });
-  }
+
+  };
 
   render(){
     return (
       <div className="row">
-        <LeftPart searchTerm={this.state.filer} searchFun={this.searchMovie}/>
-        <RightPart data={this.state.movies}/>
+        <LeftPart leftPartStyle={this.state.leftPartCss} searchTerm={this.state.filer} searchFun={this.searchMovie}/>
+        <RightPart rightPartStyle={this.state.rightPartCss} data={this.state.movies}/>
       </div>
     )
   }
