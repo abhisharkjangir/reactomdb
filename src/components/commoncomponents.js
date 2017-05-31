@@ -174,7 +174,7 @@ class Container extends Component {
   searchMovie = (filter) => {
     this.setState({filter : filter});
 
-    let url = "http://localhost:9000/db/movie/search/" + filter.search;
+    let url = "https://omdbclone.herokuapp.com/db/movie/search/" + filter.search;
 
     if (filter.type) {
       url = url + '?type=' + filter.type;
