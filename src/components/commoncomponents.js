@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
 
 class Header extends Component{
   render(){
@@ -92,20 +93,20 @@ class RightPart extends Component {
     return(
       <div style={this.props.rightPartStyle} className="right-part">
         <div className="movie-listing">
-          <div className="card-wrapper">
-          	<div className="card-columns">
-              {this.props.data.map(movie =>
-                <div key={movie._id} className="pin">
-                  {movie.Poster !== 'N/A'?<img src={movie.Poster} onClick={() => this.getMovieDetail(movie)}  alt=''/> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" onClick={() => this.getMovieDetail(movie)} alt='' />}
-                  <div className="card-detail">
-                    <p>{movie.Title}</p>
-                    <p><strong>Type:</strong> {movie.Type}</p>
-                    <p><strong>Year:</strong> {movie.Year}</p>
+            <div className="card-wrapper">
+              <div className="card-columns">
+                {this.props.data.map(movie =>
+                  <div key={movie._id} className="pin">
+                    {movie.Poster !== 'N/A'?<img src={movie.Poster} onClick={() => this.getMovieDetail(movie)}  alt=''/> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" onClick={() => this.getMovieDetail(movie)} alt='' />}
+                    <div className="card-detail">
+                      <p>{movie.Title}</p>
+                      <p><strong>Type:</strong> {movie.Type}</p>
+                      <p><strong>Year:</strong> {movie.Year}</p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
         </div>
         {this.state.view.detail?<DetailOverlay  movie={this.state.movie} closeFun={this.closeDetailView} /> :''}
       </div>
@@ -117,11 +118,29 @@ class DetailOverlay extends Component {
 
   render(){
     const movie = this.props.movie;
+    const style = {
+      left : {float : "left",width:'50%'},
+      right : {float : "right",width:'50%'},
+      img : {display : 'block',margin : 'auto'}
+    };
     return (
       <div className="detail-overlay">
-        <h1>{movie.Title}</h1><br/>
-        <p>Released on : {movie.Released} | Dur : {movie.Runtime} | Language : {movie.Language} | Country : {movie.Country} </p>
-        <p>{movie.Awards} | Metascore : {movie.Metascore} | IMDBRating : {movie.imdbRating} | IMDBVotes : {movie.imdbVotes} </p>
+        <div style={style.left}>
+          {movie.Poster !== 'N/A'? <img src={movie.Poster} style={style.img}/> : <img src="https://cdn.shopify.com/s/files/1/1086/5806/t/7/assets/noimage.jpg?15641361903102762456" style={style.img}/> }
+        </div>
+        <div style={style.right}>
+
+          <h1>{movie.Title}</h1><br/>
+          <p>Released on : {movie.Released} | Dur : {movie.Runtime} | Language : {movie.Language} | Country : {movie.Country} </p>
+          <p>Awards : {movie.Awards} | Metascore : {movie.Metascore} | IMDBRating : {movie.imdbRating} | IMDBVotes : {movie.imdbVotes} </p>
+          <p>DVD : {movie.DVD} | BoxOffice : {movie.BoxOffice} | Production : {movie.Production} | Website : {movie.Website} </p>
+          <p><strong>Genre - </strong> {movie.Genre}</p>
+          <p><strong>Director - </strong> {movie.Director}</p>
+          <p><strong>Writer - </strong> {movie.Writer}</p>
+          <p><strong>Actors - </strong> {movie.Actors}</p>
+          <p><strong>Plot - </strong> {movie.Plot}</p>
+
+        </div>
         <span className="close-detail-view-btn" onClick={this.props.closeFun} >Close </span>
       </div>
     )
@@ -135,7 +154,10 @@ class Container extends Component {
     this.state = {movies :[],
       filer : {
         search : '',
-        year : '',type:''
+        year : '',
+        type:'',
+        poster : '',
+        hasMore : false
       },
       leftPartCss : {
         width: '100%',
@@ -144,16 +166,20 @@ class Container extends Component {
       rightPartCss : {
       width: '0%',
       float : "right"
-      }
+    }
     };
     this.searchMovie = this.searchMovie.bind(this);
   }
 
   searchMovie = (filter) => {
+    this.setState({filter : filter});
+
     let url = "http://localhost:9000/db/movie/search/" + filter.search;
+
     if (filter.type) {
       url = url + '?type=' + filter.type;
     }
+
     if (filter.year) {
       if (filter.type) {
         url = url + '&year=' + filter.year;
@@ -161,6 +187,7 @@ class Container extends Component {
         url = url + '?year=' + filter.year;
       }
     }
+
     if (filter.poster) {
       if (filter.type || filter.year) {
         url = url + '&poster=' + filter.poster;
@@ -168,6 +195,13 @@ class Container extends Component {
         url = url + '?poster=' + filter.poster;
       }
     }
+
+    if(filter.type || filter.year || filter.poster){
+      url = url + '&from=0' + filter.poster + '&limit=50';
+    }else {
+      url = url + '?from=0' + filter.poster + '&limit=50';
+    }
+
     fetch(url)
      .then(response => response.json())
      .then(x => {
@@ -198,7 +232,6 @@ class Container extends Component {
          }});
        }
      });
-
   };
 
   render(){
